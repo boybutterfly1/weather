@@ -37,8 +37,12 @@ export const useWeatherStore = defineStore('weather', () => {
 
   async function fetchForecast() {
     try {
-      const response: AxiosResponse = await apiWeather.getForecast(searchQuery.value)
-
+      const response: AxiosResponse = await new Promise((resolve) => {
+        setTimeout(async () => {
+          const data = await apiWeather.getForecast(searchQuery.value)
+          resolve(data)
+        }, 3000)
+      })
       location.value.name = response.data.location.name
       location.value.localtime = new Date().toDateString()
 
