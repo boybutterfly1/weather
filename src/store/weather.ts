@@ -31,16 +31,48 @@ export const useWeatherStore = defineStore('weather', () => {
   })
   const forecast = ref<ForecastT[]>([])
 
-  const searchQuery = ref<string>('London')
-  const searchedCoordinates = ref<number[] | null>(null)
-  const userLocation = ref<number[] | null>(null)
+  const defaultParameters = ref({
+    location: 'Moscow',
+    mapCenter: [37.617644, 55.755819]
+  })
 
+  const mapCenter = ref<number[]>(defaultParameters.value.mapCenter)
+
+  const isLoading = ref(true)
+  const searchQuery = ref<string>('')
+  const userCoordinates = ref<number[] | null>(null)
+
+  async function getUserCoordinates(): Promise<number[]> {
+    return new Promise((resolve, reject) => {
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const coordinates: number[] = [position.coords.longitude, position.coords.latitude]
+          userCoordinates.value = coordinates
+          mapCenter.value = userCoordinates.value
+          resolve(coordinates);
+        }, (error) => {
+          reject(error);
+        });
+      } else {
+        reject('Геолокация не поддерживается в вашем браузере.');
+      }
+    });
+  }
   async function fetchForecast() {
     try {
+      isLoading.value = true
       const response: AxiosResponse = await new Promise((resolve) => {
         setTimeout(async () => {
-          const data = await apiWeather.getForecast(searchQuery.value)
-          resolve(data)
+          if (searchQuery.value) {
+            const data = await apiWeather.getForecast(searchQuery.value)
+            resolve(data)
+          } else if (userCoordinates.value) {
+            const data = await apiWeather.getForecast([...userCoordinates.value].reverse().join(','))
+            resolve(data)
+          } else {
+            const data = await apiWeather.getForecast(defaultParameters.value.location)
+            resolve(data)
+          }
         }, 3000)
       })
       location.value.name = response.data.location.name
@@ -54,6 +86,7 @@ export const useWeatherStore = defineStore('weather', () => {
       current.value.pressure = response.data.current.pressure_mb
       current.value.humidity = response.data.current.humidity
 
+      forecast.value = []
       response.data.forecast.forecastday.forEach((day: ForecastDayT) => {
         const newForecastItem: ForecastT = {
           date: day.date_epoch * 1000,
@@ -66,38 +99,26 @@ export const useWeatherStore = defineStore('weather', () => {
 
     } catch (e) {
       console.log(e)
+    } finally {
+      isLoading.value = false
     }
   }
   async function handleSearch() {
     const response = await apiWeather.getCoordinates(searchQuery.value)
-    searchedCoordinates.value = [response.data[0].lat, response.data[0].lon]
+    mapCenter.value = [response.data[0].lat, response.data[0].lon].reverse()
+    await fetchForecast()
   }
-  async function getUserLocation(): Promise<number[]> {
-    return new Promise((resolve, reject) => {
-      if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const coordinates: number[] = [position.coords.latitude, position.coords.longitude]
-          userLocation.value = coordinates
-          resolve(coordinates);
-        }, (error) => {
-          reject(error);
-        });
-      } else {
-        reject('Геолокация не поддерживается в твоем браузере.');
-      }
-    });
-  }
-
 
   return {
     location,
     current,
     forecast,
+    mapCenter,
+    isLoading,
     searchQuery,
-    searchedCoordinates,
-    userLocation,
+    userCoordinates,
     fetchForecast,
     handleSearch,
-    getUserLocation
+    getUserCoordinates
   }
 })

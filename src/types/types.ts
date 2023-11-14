@@ -1,6 +1,6 @@
 export interface LocationT {
   name: string,
-  localtime: string
+  localtime: string,
 }
 export interface CurrentT {
   temperature: number,
