@@ -29,7 +29,7 @@ const weekDays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   max-width: 1020px
   min-width: 350px
   &_day
-    width: 70px
+    min-width: 50px
     height: 110px
     display: flex
     flex-direction: column

@@ -89,6 +89,57 @@ weatherStore.fetchForecast()
       & img
         width: 25px
         margin-right: 5px
+@media (max-width: 1100px)
+  .current-weather
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 10px
+    width: 450px
+    height: 300px
+    padding: 20px 50px 30px
+    border-radius: 10px
+    background-color: rgba(122, 92, 176, 0.5)
+    box-shadow: 5px 10px 10px rgba(0,0,0,0.2)
+    color: white
+    &_location
+      display: flex
+      flex-direction: column
+      align-self: center
+      align-items: center
+      &_name
+        font-size: 45px
+        font-weight: 500
+      &_date
+        font-size: 25px
+        font-weight: 300
+    &_current
+      display: flex
+      align-items: center
+      gap: 15px
+      &_temperature
+        font-size: 70px
+        font-weight: 500
+      &_description
+        display: flex
+        flex-direction: column
+        &_condition
+          font-size: 25px
+          font-weight: 400
+        &_feels-like
+          font-size: 25px
+          font-weight: 300
+    &_other-parameters
+      display: flex
+      gap: 25px
+      font-size: 20px
+      font-weight: 400
+      &_parameter
+        display: flex
+        align-items: center
+        & img
+          width: 25px
+          margin-right: 5px
 @media (max-width: 480px)
   .current-weather
     display: flex

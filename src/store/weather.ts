@@ -16,19 +16,8 @@ interface ForecastDayT {
 }
 
 export const useWeatherStore = defineStore('weather', () => {
-  const location = ref<LocationT>({
-    name: '',
-    localtime: ''
-  })
-  const current = ref<CurrentT>({
-    temperature: 0,
-    feelsLike: 0,
-    condition: '',
-    icon: '',
-    windSpeed: 0,
-    pressure: 0,
-    humidity: 0
-  })
+  const location = ref<LocationT>({} as LocationT)
+  const current = ref<CurrentT>({} as CurrentT)
   const forecast = ref<ForecastT[]>([])
 
   const defaultParameters = ref({
@@ -40,6 +29,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
   const isLoading = ref(true)
   const searchQuery = ref<string>('')
+  const searchedLocation = ref<string>('')
   const userCoordinates = ref<number[] | null>(null)
 
   async function getUserCoordinates(): Promise<number[]> {
@@ -60,11 +50,10 @@ export const useWeatherStore = defineStore('weather', () => {
   }
   async function fetchForecast() {
     try {
-      isLoading.value = true
       const response: AxiosResponse = await new Promise((resolve) => {
         setTimeout(async () => {
-          if (searchQuery.value) {
-            const data = await apiWeather.getForecast(searchQuery.value)
+          if (searchedLocation.value) {
+            const data = await apiWeather.getForecast(searchedLocation.value)
             resolve(data)
           } else if (userCoordinates.value) {
             const data = await apiWeather.getForecast([...userCoordinates.value].reverse().join(','))
@@ -104,8 +93,12 @@ export const useWeatherStore = defineStore('weather', () => {
     }
   }
   async function handleSearch() {
-    const response = await apiWeather.getCoordinates(searchQuery.value)
+    isLoading.value = true
+    searchedLocation.value = searchQuery.value
+    console.log(searchQuery.value)
+    const response = await apiWeather.getCoordinates(searchedLocation.value)
     mapCenter.value = [response.data[0].lat, response.data[0].lon].reverse()
+    console.log(mapCenter.value)
     await fetchForecast()
   }
 

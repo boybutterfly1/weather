@@ -45,10 +45,10 @@ const weatherStore = useWeatherStore()
   max-width: 1020px
   min-width: 350px
   &_day
-    width: 50px
+    min-width: 50px
     display: flex
     flex-direction: column
-    align-items: start
+    align-items: center
     & img
       width: 45px
 @media (max-width: 480px)

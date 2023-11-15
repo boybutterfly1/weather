@@ -21,7 +21,7 @@
 import type { YMap } from '@yandex/ymaps3-types';
 import { useWeatherStore } from '@/store/weather';
 import {YandexMap, YandexMapDefaultSchemeLayer} from "vue-yandex-maps";
-import {onMounted, ref, shallowRef} from "vue";
+import {shallowRef} from "vue";
 
 const weatherStore = useWeatherStore();
 const map = shallowRef<YMap | null>(null);
@@ -41,6 +41,15 @@ weatherStore.getUserCoordinates()
   box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.2)
 .ymaps3x0--map
   border-radius: 10px
+@media (max-width: 1100px)
+  .map
+    width: 450px
+    height: 300px
+    border-radius: 10px
+    background-color: rgba(122, 92, 176, 0.5)
+    box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.2)
+  .ymaps3x0--map
+    border-radius: 10px
 @media (max-width: 480px)
   .map
     width: 350px

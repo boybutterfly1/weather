@@ -10,13 +10,16 @@
         v-model="weatherStore.searchQuery"
         @keyup.enter="weatherStore.handleSearch()"
       >
-      <img src="https://img.icons8.com/sf-regular/20/626262/search.png" alt="search">
+      <img
+          @click="weatherStore.handleSearch()"
+          src="https://img.icons8.com/sf-regular/20/626262/search.png"
+          alt="search"
+      >
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-
 import {useWeatherStore} from "@/store/weather";
 
 const weatherStore = useWeatherStore()
