@@ -1,13 +1,14 @@
 <template>
   <div class="map">
     <yandex-map
+        v-if="!weatherStore.isLoading"
         class="ymaps3x0--map"
         v-model="map"
         :settings="{
           location: {
-            center: weatherStore.mapCenter,
-            zoom: 10,
-          },
+            center: weatherStore.defaultParameters.mapCenter,
+            zoom: 10
+          }
         }"
         border-radius="10px"
         @click="handleMapClick"
@@ -21,15 +22,13 @@
 import type { YMap } from '@yandex/ymaps3-types';
 import { useWeatherStore } from '@/store/weather';
 import {YandexMap, YandexMapDefaultSchemeLayer} from "vue-yandex-maps";
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
 const weatherStore = useWeatherStore();
 const map = shallowRef<YMap | null>(null);
 
 function handleMapClick(event: any) {
 }
-
-weatherStore.getUserCoordinates()
 </script>
 
 <style scoped lang="sass">
@@ -43,7 +42,7 @@ weatherStore.getUserCoordinates()
   border-radius: 10px
 @media (max-width: 1100px)
   .map
-    width: 450px
+    width: 500px
     height: 300px
     border-radius: 10px
     background-color: rgba(122, 92, 176, 0.5)

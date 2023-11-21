@@ -5,14 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted} from "vue";
-import {useWeatherStore} from "@/store/weather";
-
-const weatherStore = useWeatherStore()
-
-onMounted(async () => {
-
-})
 </script>
 <style lang="sass">
 *
@@ -21,7 +13,7 @@ onMounted(async () => {
   box-sizing: border-box
   overscroll-behavior: none
 .app
-  font-family: 'Noto Sans', sans-serif
+  font-family: 'Montserrat', sans-serif
   background: linear-gradient(to bottom, #f7e8ff, #cbd8ff)
   height: 100vh
   overflow: auto

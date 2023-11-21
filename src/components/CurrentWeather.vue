@@ -33,9 +33,12 @@
 <script setup lang="ts">
 import {useWeatherStore} from "@/store/weather";
 import CurrentWeatherSkeleton from "@/components/Skeletons/CurrentWeatherSkeleton.vue";
+import {onMounted} from "vue";
 const weatherStore = useWeatherStore()
 
-weatherStore.fetchForecast()
+onMounted(() => {
+  weatherStore.handleUserLocation()
+})
 </script>
 
 <style scoped lang="sass">
@@ -48,7 +51,7 @@ weatherStore.fetchForecast()
   height: 300px
   padding: 20px 50px 30px
   border-radius: 10px
-  background-color: rgba(122, 92, 176, 0.5)
+  background-color: #b29fd8
   box-shadow: 5px 10px 10px rgba(0,0,0,0.2)
   color: white
   &_location
@@ -95,7 +98,7 @@ weatherStore.fetchForecast()
     flex-direction: column
     align-items: center
     gap: 10px
-    width: 450px
+    width: 500px
     height: 300px
     padding: 20px 50px 30px
     border-radius: 10px
@@ -147,7 +150,7 @@ weatherStore.fetchForecast()
     align-items: center
     gap: 10px
     width: 350px
-    height: 250px
+    height: 200px
     padding: 15px 40px 20px
     border-radius: 10px
     background-color: rgba(122, 92, 176, 0.5)
